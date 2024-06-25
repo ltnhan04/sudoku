@@ -67,8 +67,8 @@ public class SudokuGameApp extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Object[] options = {"Exit Sudoku", "Cancel"};
-                int result = JOptionPane.showOptionDialog(getParent(), "Are you sure you want to exit the application?\nActive games will not be saved.", "Exit?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                Object[] options = {"Thoát khỏi Sudoku", "Hủy"};
+                int result = JOptionPane.showOptionDialog(getParent(), "Bạn có chắc chắn muốn thoát khỏi ứng dụng không?\\nCác hoạt động của bạn sẽ không được lưu.", "Thoát?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == JOptionPane.YES_OPTION) {
                     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 } else {
@@ -146,8 +146,8 @@ public class SudokuGameApp extends JFrame {
         this.view.getHomePanel().getSignoutBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[] options = {"Yes, sign out", "No way!"};
-                int result = JOptionPane.showOptionDialog(getParent(), "Are you sure you want to sign out?", "Leaving Already?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                Object[] options = {"Đồng ý", "Không!"};
+                int result = JOptionPane.showOptionDialog(getParent(), "Bạn có chắc là bạn muốn thoát không?", "Sẵn sàng rời?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == 0) {
                     view.getCardLayoutManager().show(view.getContent(), "welcome");
                     model.setPlayer(null);
@@ -172,7 +172,7 @@ public class SudokuGameApp extends JFrame {
                     System.err.println("HINT USED: " + model.getStringHintsUsed());
                     if (model.getHintsUsed() == model.getPuzzle().getDifficulty().getMaxHints()) {
                         view.getGamePanel().getHintBtn().setEnabled(false);
-                        JOptionPane.showOptionDialog(getParent(), "Let's not make it too easy!\nThat was the last hint for this game.\n\nDid you Know?\nSudokus can likely prevent Alzheimer's disease\nand Dementia, so don't make it too easy.", "Out of Hints", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                        JOptionPane.showOptionDialog(getParent(), "Chơi vậy dễ quá đó!\n\nGợi ý cuối cùng nha.", "Hết gợi ý", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
                     }
                     checkGridCompletion();
                 }
@@ -196,7 +196,7 @@ public class SudokuGameApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object[] options = {"That's it", "Cancel"};
-                int result = JOptionPane.showOptionDialog(getParent(), "Are you sure you want to end the game?\n\nThis Sudoku is best played in one sitting,\nand can't be continued later.", "Exit?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                int result = JOptionPane.showOptionDialog(getParent(), "Bạn có chắc chắn muốn kết thúc game không?\\on\\Màn này chỉ chơi được một lần,\\và không thể quay lại đâu đó!", "Thoát?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == 0) {
                     view.getCardLayoutManager().show(view.getContent(), "home");
                     destroyGameInstance();
@@ -221,7 +221,7 @@ public class SudokuGameApp extends JFrame {
                 } else {
                     // Check if input meets contraints
                     if (!model.getPuzzle().meetsConstraints(cell, Integer.valueOf(String.valueOf(evt.getKeyChar()).trim()))) {
-                        System.err.println("VALUE " + evt.getKeyChar() + " AT " + cell.getPosition() + " DOES NOT MEET SUDOKU CONTRAINTS");
+                        System.err.println("Gia tri " + evt.getKeyChar() + " tai " + cell.getPosition() + " khong dung");
                         cell.setText("");
                         cell.setUserValue(0);
                         evt.consume();
@@ -311,7 +311,7 @@ public class SudokuGameApp extends JFrame {
      * @param args Optional startup arguments
      */
     public static void main(String[] args) {
-        JFrame frame = new SudokuGameApp("Sudoku Game");
+        JFrame frame = new SudokuGameApp("Hại não cùng Sudoku!!");
         //ImageIcon img = new ImageIcon("logo.png");
         //frame.setIconImage(img.getImage());
         frame.setLocationRelativeTo(null);
@@ -337,12 +337,12 @@ public class SudokuGameApp extends JFrame {
             refreshHomePanel();
             view.getCardLayoutManager().show(view.getContent(), "home");
         } else {
-            Object[] options = {"Let me try again"};
-            JOptionPane.showOptionDialog(this, "The credentials you have provided are invalid, please enter them correctly or create a new account.", "Invalid Credentials", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+            Object[] options = {"Thử lại lần nữa bạn nhé!"};
+            JOptionPane.showOptionDialog(this, "Thông tin đăng nhập không hợp lệ, vui lòng nhập chính xác hoặc tạo tài khoản mới.", "Thông tin không hợp lệ", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
         }
     } else {
-        Object[] options = {"Alright"};
-        JOptionPane.showOptionDialog(this, "In order to sign in, all fields must be filled out.", "Empty Fields", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        Object[] options = {"Được rồi"};
+        JOptionPane.showOptionDialog(this, "Phải điền hết mới đăng nhập được chứ!", "Ô trống rồi nè!", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
     }
 }
 
@@ -365,20 +365,20 @@ public class SudokuGameApp extends JFrame {
                 // Clear Fields
                 view.getWelcomePanel().getSignUpPanel().clear();
                 Object[] options = {"OK"};
-                JOptionPane.showOptionDialog(this, "Your registration was successful!\nYou can now sign in to your account.", "Successful Registration", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+                JOptionPane.showOptionDialog(this, "Đăng ký thành công!\n\nBây giờ bạn có thể đăng nhập vào tài khoản của mình.", "Đăng kí thành công", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
             } else {
-                Object[] options = {"Let me try again"};
-                JOptionPane.showOptionDialog(this, "Your registration was unsuccessful!\nBe sure not to create a duplicate account.", "Unsuccessful Registration", JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE, null, options, null);
+                Object[] options = {"Thử lại lần nữa nào!"};
+                JOptionPane.showOptionDialog(this, "Đăng ký không thành công!\n\nTài khoản không được trùng lặp.", "Đăng ký không thành công", JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE, null, options, null);
             }
         } else {
             // Email doesn't meet requirement
-            Object[] options = {"I will correct that"};
-            JOptionPane.showOptionDialog(this, "You must provide a valid email address.", "Invalid Email Address", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+            Object[] options = {"Tôi lo được!"};
+            JOptionPane.showOptionDialog(this, "Bạn phải cung cấp địa chỉ email hợp lệ.", "Địa chỉ email không hợp lệ", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
         }
     } else {
         // Empty Fields
-        Object[] options = {"Alright"};
-        JOptionPane.showOptionDialog(this, "In order to register, all fields must be filled out.", "Empty Fields", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        Object[] options = {"Được roày!"};
+        JOptionPane.showOptionDialog(this, "Phải điền vào hết ô mới đăng ký được chứ", "Ô trống kìa!", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
     }
 }
 
@@ -499,8 +499,8 @@ public class SudokuGameApp extends JFrame {
 
         // Award Points
         this.model.increaseScore(10);
-        Object[] options = {"Great!"};
-        JOptionPane.showOptionDialog(this, "You have solved the Puzzle.\n\nGame Time: " + gameTime + "\nHints Used: " + this.model.getStringHintsUsed() + "\n\nYour new score: " + this.model.getPlayer().getScore() + " points.", "Congratulations!", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
+        Object[] options = {"Tuyệt zời!"};
+        JOptionPane.showOptionDialog(this, "Bạn đã vượt qua được màn này.\n\nThời gian: " + gameTime + "\nSử dụng gợi ý: " + this.model.getStringHintsUsed() + "\n\n Điểm của bạn: " + this.model.getPlayer().getScore() + " điểm.", "Xin chúc mừng!", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
 
         // Return Home
         refreshHomePanel();

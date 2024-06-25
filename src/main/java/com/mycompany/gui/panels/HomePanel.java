@@ -54,15 +54,10 @@ public class HomePanel extends JPanel {
         banner.setAlignmentX(CENTER_ALIGNMENT);
             
             // Logo
-            LogoImage jP1 = new LogoImage(115, 115);
-            jP1.setBackground(BKGD_DARK_GRAY);
-            jP1.setPreferredSize(new Dimension(115, 115));
-            jP1.setMaximumSize(new Dimension(115, 115));
-            jP1.setAlignmentY(CENTER_ALIGNMENT);
+
             
             // Spacing
             banner.add(Box.createRigidArea(new Dimension(5,0)));
-            banner.add(jP1);
             banner.add(Box.createRigidArea(new Dimension(15,0)));
 
             // Dynamic Banner Content
@@ -70,13 +65,13 @@ public class HomePanel extends JPanel {
             jP2.setBackground(BKGD_DARK_GRAY);
             jP2.setPreferredSize(new Dimension(200, 100));
             jP2.setLayout(new GridLayout(2,0));
-                JLabel welcomeLabel = new JLabel("WELCOME");
+                JLabel welcomeLabel = new JLabel("Chào mừng đến với hại não cùng Sudoku");
                 welcomeLabel.setFont(new Font("Avenir", Font.PLAIN, 28));
                 welcomeLabel.setForeground(Color.WHITE);
                 welcomeLabel.setVerticalAlignment(JLabel.BOTTOM);
                 jP2.add(welcomeLabel);
 
-                nameLabel = new JLabel("Player");
+                nameLabel = new JLabel("Người chơi");
                 nameLabel.setFont(new Font("Avenir", Font.PLAIN, 18));
                 nameLabel.setForeground(Color.WHITE);
                 nameLabel.setVerticalAlignment(JLabel.TOP);
@@ -100,7 +95,7 @@ public class HomePanel extends JPanel {
                 game.setSize(300, 120);
                 game.setBackground(BKGD_LIGHT_GRAY);
                     // New Game Button
-                    newGameBtn = new AppJButton("START A NEW GAME", 20, BKGD_LIGHT_GRAY, APP_GREEN);
+                    newGameBtn = new AppJButton("Zô game mới", 20, BKGD_LIGHT_GRAY, APP_GREEN);
                     game.add(newGameBtn);
                     
                     // Difficulty Level
@@ -115,7 +110,7 @@ public class HomePanel extends JPanel {
                 game.setLocation(100, 200);
                 game.setSize(300, 120);
                     // Previous Game Button
-                    viewRulesBtn = new AppJButton("SHOW ME THE RULES", 20, BKGD_LIGHT_GRAY, APP_GREEN);
+                    viewRulesBtn = new AppJButton("Luật chơi", 20, BKGD_LIGHT_GRAY, APP_GREEN);
                     game.add(viewRulesBtn);
                 left.add(game);
                 
@@ -125,7 +120,7 @@ public class HomePanel extends JPanel {
                 actions.setLocation(0, 385);
                 actions.setSize(115, 30);
                     // Sign out Button
-                    signoutBtn = new AppJButton("SIGN OUT", 14, BKGD_LIGHT_GRAY, APP_GREEN);
+                    signoutBtn = new AppJButton("Đăng xuất", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                     actions.add(signoutBtn);
                 left.add(actions);
             main.add(left);
@@ -144,7 +139,7 @@ public class HomePanel extends JPanel {
                 };
                 
                 tableModel = (DefaultTableModel) highscores.getModel(); 
-                tableModel.setColumnIdentifiers(new String[] {"Score", "Player"});
+                tableModel.setColumnIdentifiers(new String[] {"Điểm", "Người chơi"});
                 highscores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 
                 highscores.getTableHeader().setFont(new Font(this.getFont().getFontName(), Font.PLAIN, this.getFont().getSize()));

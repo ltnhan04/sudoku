@@ -50,16 +50,8 @@ public class GamePanel extends JPanel {
         banner.setBackground(BKGD_DARK_GRAY);
         banner.setAlignmentX(CENTER_ALIGNMENT);
         
-            // Sudoku Logo
-            LogoImage jP1 = new LogoImage(115, 115);
-            jP1.setBackground(BKGD_DARK_GRAY);
-            jP1.setPreferredSize(new Dimension(115, 115));
-            jP1.setMaximumSize(new Dimension(115, 115));
-            jP1.setAlignmentY(CENTER_ALIGNMENT);
-            
             // Spacing
             banner.add(Box.createRigidArea(new Dimension(5,0)));
-            banner.add(jP1);
             
             // Dynamic Banner Content
             JPanel jP2 = new JPanel();

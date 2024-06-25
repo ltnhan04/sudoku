@@ -30,7 +30,6 @@ public class WelcomePanel extends JPanel {
         slider.add(this.signInPanel);
 
         // Adding to Panel
-        this.add(new WelcomeImage(500, 550));
         this.add(slider);
     }
 

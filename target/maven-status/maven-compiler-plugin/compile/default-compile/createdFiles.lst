@@ -9,7 +9,6 @@ com\mycompany\gui\SudokuGameApp.class
 com\mycompany\gui\SudokuGameApp$9.class
 com\mycompany\gui\model\Difficulty.class
 com\mycompany\gui\panels\HomePanel$1.class
-com\mycompany\gui\panels\LogoImage.class
 com\mycompany\gui\SudokuGameApp$4.class
 com\mycompany\gui\SudokuGameApp$12.class
 com\mycompany\gui\SudokuGameApp$2.class
@@ -30,7 +29,6 @@ com\mycompany\gui\panels\WelcomePanel.class
 com\mycompany\gui\SudokuGameApp$14.class
 com\mycompany\gui\panels\RulesPanel.class
 com\mycompany\gui\SudokuGameApp$8.class
-com\mycompany\gui\panels\WelcomeImage.class
 com\mycompany\gui\SudokuGameApp$6$1.class
 com\mycompany\gui\SudokuGameApp$3.class
 com\mycompany\gui\SudokuGameApp$11.class
