@@ -39,7 +39,7 @@ public class SignInPanel extends JPanel {
         this.setBackground(BKGD_DARK_GRAY);
 
         // Title Label
-        JLabel actionLabel = new JLabel("Sign In");
+        JLabel actionLabel = new JLabel("ĐĂNG NHẬP");
         actionLabel.setFont(new Font("Avenir", Font.PLAIN, 24));
         actionLabel.setForeground(Color.white);
         actionLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -62,7 +62,7 @@ public class SignInPanel extends JPanel {
         this.add(emailText);
 
         // Password Label
-        JLabel passwordLabel = new JLabel("Password");
+        JLabel passwordLabel = new JLabel("MẬT KHẨU");
         passwordLabel.setFont(new Font("Helvetica Neue", Font.PLAIN, 14));
         passwordLabel.setForeground(Color.white);
         passwordLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -78,11 +78,11 @@ public class SignInPanel extends JPanel {
         this.add(passwordText);
 
         // Sign In Button
-        signinButton = new AppJButton("Sign In", 14, APP_GREEN, BKGD_DARK_GRAY);
+        signinButton = new AppJButton("ĐĂNG NHẬP", 14, APP_GREEN, BKGD_DARK_GRAY);
         this.add(signinButton);
 
         // Sign Up Button
-        signupButton = new AppJButton("I am not yet registered", 10, BKGD_DARK_GRAY, APP_GREEN);
+        signupButton = new AppJButton("TÔI CHƯA ĐĂNG KÍ", 10, BKGD_DARK_GRAY, APP_GREEN);
         this.add(signupButton);
     }
 
