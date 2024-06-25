@@ -96,15 +96,15 @@ public class GamePanel extends JPanel {
             actions.setLocation(0, 415 - actions.getHeight());
 
                 // Get Hint Button
-                hintBtn = new AppJButton("HINT", 14, BKGD_LIGHT_GRAY, APP_GREEN);
+                hintBtn = new AppJButton("GỢI Ý", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(hintBtn);
             
                 // View Rules Button
-                viewRulesBtn = new AppJButton("VIEW RULES", 14, BKGD_LIGHT_GRAY, APP_GREEN);
+                viewRulesBtn = new AppJButton("XEM LUẬT", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(viewRulesBtn);
             
                 // Sign Out Button
-                endGameBtn = new AppJButton("END GAME", 14, BKGD_LIGHT_GRAY, APP_GREEN);
+                endGameBtn = new AppJButton("NGHỈ GAME", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(endGameBtn);
             main.add(actions);
             

@@ -39,7 +39,7 @@ public class AppJButton extends JButton {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                setBackground(new Color(72, 84, 93));
+                setBackground(new Color(255, 200, 221));
             }
 
             @Override

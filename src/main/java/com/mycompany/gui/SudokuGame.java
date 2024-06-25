@@ -20,9 +20,9 @@ import org.json.JSONObject;
 public class SudokuGame {
 
     // Sudoku App Colors
-    public static final Color BKGD_DARK_GRAY = new Color(42, 54, 63);
-    public static final Color BKGD_LIGHT_GRAY = new Color(62, 74, 83);
-    public static final Color APP_GREEN = new Color(146, 208, 80);
+    public static final Color BKGD_DARK_GRAY = new Color(6, 71, 137);
+    public static final Color BKGD_LIGHT_GRAY = new Color(66, 122, 161);
+    public static final Color APP_GREEN = new Color(235, 242, 250);
 
     // Sudoku Model Attributes
     private ArrayList<Player> highscores;

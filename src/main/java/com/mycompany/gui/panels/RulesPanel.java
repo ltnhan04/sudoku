@@ -27,19 +27,19 @@ public class RulesPanel extends JPanel {
      */
     public RulesPanel() {
 
-        this.rules = "<html>The rules are simple, there are 81 squares on a grid.<br>"
-                + "A grid is divided into 9 subgrids (blocks), which each contain 9 cells.<br><br>"
-                + "In the begining, a cell could contain either a digit or be empty.<br>"
-                + "Using these \"hints\", it is up to you to correctly fill every cell "
-                + "on the grid with its own digit (1-9).<br><br>"
-                + "What's the catch?<br>"
-                + " > Each digit must only appear once in each row.<br>"
-                + " > Each digit must only appear once in each column.<br>"
-                + " > Each digit must only appear once in each subgrid.<br><br>"
-                + "Sounds easy, right?<br>"
-                + "How about changing the difficulty level of the game? "
-                + "There are actually over 10 billion unique grids.<br><br>"
-                + "Happy Solving!!</html>";
+        this.rules = "<html>Luật chơi rất đơn giản, có 81 ô vuông trên một lưới.<br>"
+                + "Một lưới được chia thành 9 lưới con (khối), mỗi lưới chứa 9 ô.<br><br>"
+                + "Ban đầu, một ô có thể chứa một chữ số hoặc để trống.<br>"
+                + "Bằng cách sử dụng những \\\"gợi ý\\\" này, bạn có thể điền chính xác vào từng ô "
+                + "trên lưới có chữ số riêng (1-9).<br><br>"
+                + "Điều đáng chú ý là gì?<br>"
+                + " > Mỗi chữ số chỉ được xuất hiện một lần trong mỗi hàng.<br>"
+                + " > Mỗi chữ số chỉ được xuất hiện một lần trong mỗi cột.<br>"
+                + " > Mỗi chữ số chỉ được xuất hiện một lần trong mỗi lưới con.<br><br>"
+                + "Nghe có vẻ dễ dàng nhỉ?<br>"
+                + "Làm thế nào về việc thay đổi mức độ khó của trò chơi? "
+                + "Thực tế có hơn 10 tỷ lưới duy nhất.<br><br>"
+                + "Chúc bạn giải quyết vui vẻ!!</html>";
 
         this.setLayout(new GridLayout(1, 0));
         this.setBackground(BKGD_DARK_GRAY);
@@ -49,7 +49,7 @@ public class RulesPanel extends JPanel {
         content.setLayout(new BorderLayout());
         content.setBackground(BKGD_DARK_GRAY);
 
-            JLabel titleLabel = new JLabel("Game Rules");
+            JLabel titleLabel = new JLabel("lUẬT CỦA GAME");
             titleLabel.setFont(new Font("Avenir", Font.PLAIN, 24));
             titleLabel.setForeground(Color.white);
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -62,7 +62,7 @@ public class RulesPanel extends JPanel {
             text.setBorder(new EmptyBorder(10, 10, 10, 10));
             content.add(text, BorderLayout.CENTER);
 
-            backBtn = new AppJButton("Take me Back", 24, APP_GREEN, BKGD_DARK_GRAY);
+            backBtn = new AppJButton("QUAY LẠI", 24, APP_GREEN, BKGD_DARK_GRAY);
             content.add(backBtn, BorderLayout.SOUTH);
 
         this.add(new WelcomeImage(500, 550));
