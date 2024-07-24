@@ -1,4 +1,5 @@
 package com.mycompany.gui;
+import java.util.Comparator;
 
 import com.mycompany.gui.model.Player;
 import static com.mycompany.gui.SudokuGame.APP_GREEN;
@@ -22,12 +23,15 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * This is the Sudoku Game (CONTROLLER).
@@ -37,10 +41,10 @@ import javax.swing.border.LineBorder;
  */
 public class SudokuGameApp extends JFrame {
 
-    // Local Model-View Link Variables
     private final SudokuGame model;
     private final SudokuGamePanel view;
-    private String rulesCaller; // -> Tells us where the back button on the rules pane should redirect to based on its caller
+    private ArrayList<Player> listUsers;
+    private String rulesCaller;
     private final KeyListener cellKeyListener;
     private final MouseListener cellMouseListener;
     /**
@@ -56,12 +60,10 @@ public class SudokuGameApp extends JFrame {
         setSize(1000, 650);
         setResizable(false);
 
-        // Fill Difficulty Selector
         for (Difficulty diff : Difficulty.values()) {
             view.getHomePanel().getLevelSelectionModel().addElement(diff);
         }
 
-        // Window Action Listeners
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -75,7 +77,6 @@ public class SudokuGameApp extends JFrame {
             }
         });
 
-        // Action Listeners on Welcome Panel
         this.view.getWelcomePanel().getSignUpPanel().getSigninButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,19 +102,15 @@ public class SudokuGameApp extends JFrame {
             }
         });
 
-        // Action Listeners on Home Panel
         this.view.getHomePanel().getNewGameBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get Level for the Game
                 Difficulty level = Difficulty.valueOf(view.getHomePanel().getLevelSelector().getSelectedItem().toString().toUpperCase());
 
-                // Generate New Game
                 Generator puzzle = new Generator();
                 puzzle.generateGrid(level);
                 model.setPuzzle(puzzle.getGrid());
 
-                // Configure View
                 view.getGamePanel().setViewCellList(model.getPuzzle().getCellList());
                 view.getGamePanel().getLevelTitle().setText(String.valueOf(level));
                 update();
@@ -349,16 +346,14 @@ public class SudokuGameApp extends JFrame {
      */
     private void signUpEvt() {
     String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-    // Get User Details
     String fullname = this.view.getWelcomePanel().getSignUpPanel().getFullnameText().getText().trim();
     String email = this.view.getWelcomePanel().getSignUpPanel().getEmailText().getText().trim();
     String password = new String(this.view.getWelcomePanel().getSignUpPanel().getPasswordText().getPassword()).trim();
     if (!fullname.equals("") && !email.equals("") && !password.equals("")) {
         if (email.matches(emailRegex)) {
-            Player player = new Player(fullname, email, password); // Khởi tạo Player với fullname, email và password
+            Player player = new Player(fullname, email, password); 
             if (player.registerUser()) {
                 view.getWelcomePanel().getCardLayoutManager().next(view.getWelcomePanel().getSlider());
-                // Clear Fields
                 view.getWelcomePanel().getSignUpPanel().clear();
                 Object[] options = {"OK"};
                 JOptionPane.showOptionDialog(this, "Đăng ký thành công!\nBạn có thể đăng nhập.", "Đăng ký thành công", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
@@ -382,14 +377,23 @@ public class SudokuGameApp extends JFrame {
     /**
      * Updates (refreshes) the Home panel.
      */
-    private void refreshHomePanel() {
-        // Set Player Name Text
-        view.getHomePanel().getNameLabel().setText(SudokuGame.getCurrentPlayer().getUsername().toUpperCase());
+private void refreshHomePanel() {
+    view.getHomePanel().getNameLabel().setText(SudokuGame.getCurrentPlayer().getUsername().toUpperCase());
 
-        // Update Highscore Table
-        view.getHomePanel().getTableModel().setRowCount(0);
-        updateListUsers(model.getListUsers());
+    // Sắp xếp listUsers trước khi cập nhật bảng
+
+    view.getHomePanel().getTableModel().setRowCount(0);
+
+    updateListUsers(model.getListUsers());
+}
+
+
+private void updateListUsers(ArrayList<Player> listUsers) {
+    DefaultTableModel tableModel = view.getHomePanel().getTableModel();
+    for (Player user : listUsers) {
+        tableModel.addRow(new Object[]{user.getScore(), user.getUsername(), user.getTime()});
     }
+}
 
     /**
      * View update event handler.
@@ -441,29 +445,12 @@ public class SudokuGameApp extends JFrame {
 
     }
 
-    /**
-     * Updates the table model with players' scores
-     *
-     * @param tableContent the list of players to include
-     */
-    public void updateListUsers(ArrayList<Player> tableContent) {
-        // Add scores to table
-        for (Player p : tableContent) {
-            view.getHomePanel().getTableModel().addRow(playerToObjArray(p));
-        }
-    }
-
-    /**
-     * Extracts key score information from Player object into String array
-     *
-     * @param player the player affected
-     * @return a String array with player score and name
-     */
     public static Object[] playerToObjArray(Player player) {
         // Split Player into its respective sections
         Object[] initList = new Object[2];
         initList[0] = player.getScore();
         initList[1] = player.getUsername();
+        initList[2] = player.getTime();
         return initList;
     }
 
@@ -482,30 +469,31 @@ public class SudokuGameApp extends JFrame {
      * Events which fire at completion of Sudoku grid
      */
     private void puzzleCompleted() {
-        // Stop timer
         this.model.getTimer().stop();
         String gameTime = view.getGamePanel().getTimeLabel().getText();
-
-        // Lock all cells to prevent editing
+        int totalSeconds = convertTimeToSeconds(gameTime);
+        System.out.print(totalSeconds);
         for (Cell cell : this.model.getPuzzle().getCellList()) {
             cell.setLocked(true);
         }
 
         update();
 
-        // Award Points
-        this.model.increaseScore(10);
+        this.model.increaseScore(10, totalSeconds);
         Object[] options = {"Tuyệt vời!"};
         JOptionPane.showOptionDialog(this, "Chúc mừng bạn đã giải thành công.\nVới thời gian: " + gameTime + "\nSố gợi ý: " + this.model.getStringHintsUsed() +"\nĐiểm của bạn là: 10" +"\n\nTổng của bạn: " + this.model.getCurrentPlayer().getScore() + " điểm.", "Xin chúc mừng!", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
 
-        // Return Home
         refreshHomePanel();
         view.getCardLayoutManager().show(view.getContent(), "home");
 
-        // Destroy Game
         destroyGameInstance();
     }
-
+    private int convertTimeToSeconds(String gameTime) {
+    String[] parts = gameTime.split(":");
+    int minutes = Integer.parseInt(parts[0]);
+    int seconds = Integer.parseInt(parts[1]);
+    return minutes * 60 + seconds;
+}
     /**
      * Clears game settings after game
      */
