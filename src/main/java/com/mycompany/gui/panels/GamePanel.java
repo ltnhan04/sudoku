@@ -50,7 +50,6 @@ public class GamePanel extends JPanel {
         banner.setBackground(BKGD_DARK_GRAY);
         banner.setAlignmentX(CENTER_ALIGNMENT);
         
-            // Sudoku Logo
 
             
             // Spacing

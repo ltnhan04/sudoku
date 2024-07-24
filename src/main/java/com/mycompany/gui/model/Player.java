@@ -15,16 +15,18 @@ public class Player {
     private String email;
     private String password;
     private int score;
-    private static final String USER_API_URL = "https://script.google.com/macros/s/AKfycbzg8E4g7UEAwi4DlABQmcehPJ1E_9bBCR80SNUpMHmlCYsLxxL18WE-rxeIU8vlMBfuPg/exec";
+    private int gameTime;
+    private static final String USER_API_URL = "https://script.google.com/macros/s/AKfycbynMsU9z5pdw6zDqHt9tyUbsIU5bia4GEvhMQTBmNnpu_gAQKHXTxmnBP9e32aHuzhz/exec";
     private ArrayList<Player> listUsers;
     private Player player;
 
-    public Player(int id, String username, String email, String password, int score) {
+    public Player(int id, String username, String email, String password, int score, int gameTime) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.score = score;
+        this.gameTime = gameTime;
     }
 
     public Player(String username, String email, String password) {
@@ -32,6 +34,7 @@ public class Player {
         this.email = email;
         this.password = password;
         this.score = 0;
+        this.gameTime = 0;
     }
 
     public Player(String email, String password) {
@@ -51,7 +54,6 @@ public class Player {
 
             String responseData = response.body().string();
             JSONArray jsonArray = new JSONArray(responseData);
-
             this.listUsers = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -61,8 +63,8 @@ public class Player {
                 String email = jsonObject.getString("email");
                 String password = jsonObject.getString("password");
                 int score = jsonObject.getInt("score");
-
-                Player player = new Player(id, username, email, password, score);
+                int gameTime = jsonObject.getInt("time");
+                Player player = new Player(id, username, email, password, score, gameTime);
                 this.listUsers.add(player);
 
                 if (i == 0) {
@@ -81,6 +83,7 @@ public class Player {
                 this.id = player.getId();
                 this.username = player.getUsername();
                 this.score = player.getScore();
+                this.gameTime = player.getTime();
                 // Lưu thông tin người dùng hiện tại vào SudokuGame.currentPlayer
                 SudokuGame.setCurrentPlayer(player);
                 return true;
@@ -96,7 +99,6 @@ public class Player {
                 return false;
             }
         }
-        this.score = 0;
         return postUserToAPI();
     }
 
@@ -108,7 +110,7 @@ public class Player {
         jsonObject.put("email", this.email);
         jsonObject.put("password", this.password);
         jsonObject.put("score", this.score);
-
+        jsonObject.put("time", 0);
         RequestBody body = RequestBody.create(
                 jsonObject.toString(), MediaType.parse("application/json; charset=utf-8"));
 
@@ -125,14 +127,14 @@ public class Player {
         }
     }
 
-    public boolean updateScoreInAPI(int id, int score) {
+    public boolean updateScoreInAPI(int id, int score, int gameTime) {
         OkHttpClient client = new OkHttpClient();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("action", "updateScore");
         jsonObject.put("id", id);
         jsonObject.put("score", score);
-
+        jsonObject.put("time", gameTime);
         RequestBody body = RequestBody.create(
                 jsonObject.toString(), MediaType.parse("application/json; charset=utf-8"));
 
@@ -148,7 +150,6 @@ public class Player {
             return false;
         }
     }
-
 
     public int getId() {
         return id;
@@ -189,4 +190,11 @@ public class Player {
     public void setScore(int score) {
         this.score = score;
     }
+    public void setTime(int gameTime){
+        this.gameTime = gameTime;
+    }
+    public int getTime(){
+        return gameTime;
+    }
+
 }

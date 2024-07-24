@@ -30,7 +30,7 @@ public class SudokuGame {
     private int hintsUsed;
     private Timer timer;
 
-    private static final String USER_API_URL = "https://script.google.com/macros/s/AKfycbzg8E4g7UEAwi4DlABQmcehPJ1E_9bBCR80SNUpMHmlCYsLxxL18WE-rxeIU8vlMBfuPg/exec";
+    private static final String USER_API_URL = "https://script.google.com/macros/s/AKfycbynMsU9z5pdw6zDqHt9tyUbsIU5bia4GEvhMQTBmNnpu_gAQKHXTxmnBP9e32aHuzhz/exec";
 
     // Thêm một đối tượng lưu thông tin người dùng hiện tại
     private static Player currentPlayer;
@@ -70,8 +70,9 @@ public class SudokuGame {
                 String email = jsonObject.getString("email");
                 String password = jsonObject.getString("password");
                 int score = jsonObject.getInt("score");
-
-                Player player = new Player(id, username, email, password, score);
+                int gameTime = jsonObject.getInt("time");
+                System.out.print("game time: " + gameTime);
+                Player player = new Player(id, username, email, password, score, gameTime);
                 this.listUsers.add(player);
 
                 // Set the first player as the current player for demo purposes
@@ -89,10 +90,11 @@ public class SudokuGame {
      *
      * @param pointsAwarded the number of points to increase by
      */
-    public void increaseScore(int pointsAwarded) {
+    public void increaseScore(int pointsAwarded, int gameTime) {
         if (currentPlayer != null) {
             currentPlayer.setScore(currentPlayer.getScore() + pointsAwarded);
-            currentPlayer.updateScoreInAPI(currentPlayer.getId(), currentPlayer.getScore());
+            currentPlayer.setTime(gameTime);
+            currentPlayer.updateScoreInAPI(currentPlayer.getId(), currentPlayer.getScore(), currentPlayer.getTime());
         }
     }
 
