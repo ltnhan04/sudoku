@@ -32,6 +32,7 @@ public class GamePanel extends JPanel {
     private final JButton endGameBtn;
     private final JButton viewRulesBtn;
     private final JButton hintBtn;
+    private final JButton undoBtn;
     private final JPanel grid;
     private JLabel levelTitle;
     private JLabel timeLabel;
@@ -85,10 +86,12 @@ public class GamePanel extends JPanel {
         main.setBackground(BKGD_DARK_GRAY);           
                        
             JPanel actions = new JPanel();
-            actions.setLayout(new GridLayout(3,1));
+            actions.setLayout(new GridLayout(4,1));
             actions.setSize(135, 90);
             actions.setLocation(0, 415 - actions.getHeight());
-
+            
+                undoBtn = new AppJButton("UNDO",14,BKGD_LIGHT_GRAY, APP_GREEN );
+                actions.add(undoBtn);
                 // Get Hint Button
                 hintBtn = new AppJButton("GỢI Ý", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(hintBtn);
@@ -123,7 +126,9 @@ public class GamePanel extends JPanel {
     public JButton getEndGameBtn() {
         return endGameBtn;
     }
-
+    public JButton getUndoBtn(){
+        return undoBtn;
+    }
     /**
      * @return the viewRulesBtn
      */

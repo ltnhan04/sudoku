@@ -31,6 +31,23 @@ public class Cell extends JTextField {
     }
 
     /**
+     * Constructs a Cell object with a specified position and solution value
+     *
+     * @param position the position of the cell
+     * @param solutionValue the solution value of the cell
+     */
+    public Cell(CellPosition position, int solutionValue) {
+        this.position = position;
+        this.solutionValue = solutionValue;
+    }
+
+    public Cell(CellPosition position, boolean locked, int userValue) {
+        this.position = position;
+        this.locked = locked;
+        this.userValue = userValue;
+    }
+
+    /**
      * @return the position of this cell
      */
     public CellPosition getPosition() {
@@ -52,8 +69,7 @@ public class Cell extends JTextField {
     }
 
     /**
-     * @return true if cell is empty (ie. 0), false if cell isn't empty (ie. not
-     * 0)
+     * @return true if cell is empty (ie. 0), false if cell isn't empty (ie. not 0)
      */
     public boolean isEmpty() {
         return getUserValue() == 0;
@@ -110,7 +126,7 @@ public class Cell extends JTextField {
             // Uncomment the following line if you don't use NetBeans:
             //return "[" + getUserValue() + "]";
 
-            // NetBeans only! Print locked/generated cells in red (irrelevamt for GUI):
+            // NetBeans only! Print locked/generated cells in red (irrelevant for GUI):
             return "[" + COLOUR_RED + getUserValue() + COLOUR_RESET + "]";
         }
         return ("[" + (isEmpty() ? "_" : getUserValue()) + "]");
@@ -129,8 +145,7 @@ public class Cell extends JTextField {
     /**
      * Compares 'this' cell with input cell
      *
-     * @param object the input object that will be compared to 'this' object
-     * (Cell)
+     * @param object the input object that will be compared to 'this' object (Cell)
      * @return true if objects equal, else false
      */
     @Override

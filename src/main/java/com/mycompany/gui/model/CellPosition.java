@@ -2,8 +2,7 @@ package com.mycompany.gui.model;
 
 /**
  * Information about a cell's position in the grid
- *
- * @author Nhan
+ * 
  * @version 1.0
  */
 public class CellPosition {
@@ -15,15 +14,15 @@ public class CellPosition {
 
     /**
      * Constructs a CellPosition object at row and column
-     *
-     * @param row the row of the cell position
+     * 
+     * @param row    the row of the cell position
      * @param column the column of the cell position
      */
     public CellPosition(int row, int column) {
         this.row = row;
         this.column = column;
 
-        // Evaluate which wich sub-grid this cell associates itself
+        // Evaluate which sub-grid this cell associates itself with
         int evaluate = this.row < 3 ? 0 : this.row < 6 ? 2 : 4;
         this.subgrid = (this.row / 3) + (this.column / 3) + evaluate;
     }
@@ -50,8 +49,7 @@ public class CellPosition {
     }
 
     /**
-     * @return formatted cell position (e.g. 1A), on fail return [row,column]
-     * format
+     * @return formatted cell position (e.g. 1A), on fail return [row,column] format
      */
     @Override
     public String toString() {

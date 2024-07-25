@@ -1,5 +1,4 @@
 package com.mycompany.gui;
-import java.util.Comparator;
 
 import com.mycompany.gui.model.Player;
 import static com.mycompany.gui.SudokuGame.APP_GREEN;
@@ -23,8 +22,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
+import java.util.Stack;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,22 +39,23 @@ import javax.swing.table.DefaultTableModel;
  * @version 1.0
  */
 public class SudokuGameApp extends JFrame {
-
+    private Stack<Cell> undoStack;
     private final SudokuGame model;
     private final SudokuGamePanel view;
     private ArrayList<Player> listUsers;
     private String rulesCaller;
     private final KeyListener cellKeyListener;
     private final MouseListener cellMouseListener;
+
     /**
      * Constructs the Sudoku Game Frame
      *
      * @param name title of the application window
      */
     public SudokuGameApp(String name) {
-        super(name);
-        this.model = new SudokuGame();
+        super(name);        this.model = new SudokuGame();
         this.view = new SudokuGamePanel();
+        this.undoStack = new Stack<>();
         getContentPane().add(this.view);
         setSize(1000, 650);
         setResizable(false);
@@ -154,6 +154,23 @@ public class SudokuGameApp extends JFrame {
                 }
             }
         });
+        //actions listeners on undo button
+        
+    this.view.getGamePanel().getUndoBtn().addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!undoStack.isEmpty()) {
+            Cell previousState = undoStack.pop();
+            Cell cell = model.getPuzzle().getCellAt(previousState.getPosition());
+            cell.setUserValue(previousState.getUserValue());
+            cell.setText(previousState.getUserValue() == 0 ? "" : String.valueOf(previousState.getUserValue()));
+            update();
+        } else {
+            JOptionPane.showMessageDialog(null, "Không có hành động nào để hoàn tác!", "Undo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+});
+
 
         // Actions Listeners on Game & Rules Panel
         this.view.getGamePanel().getHintBtn().addActionListener(new ActionListener() {
@@ -164,7 +181,7 @@ public class SudokuGameApp extends JFrame {
                     model.getPuzzle().hint(false);
                     model.setHintsUsed(model.getHintsUsed() + 1);
                     update();
-                    System.err.println("Số gợi ý đã dùng: " + model.getStringHintsUsed());
+                    System.out.println("Số gợi ý đã dùng: " + model.getStringHintsUsed());
                     if (model.getHintsUsed() == model.getPuzzle().getDifficulty().getMaxHints()) {
                         view.getGamePanel().getHintBtn().setEnabled(false);
                         JOptionPane.showOptionDialog(getParent(), "Đừng làm game dễ như vậy!\nĐây là gợi ý cuối cùng.", "Hết lượt gợi ý", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -200,104 +217,73 @@ public class SudokuGameApp extends JFrame {
         });
 
         // Cell Listener Adapters
-        this.cellKeyListener = new KeyAdapter() {
-            /**
-             * Validates the user input for the cell
-             *
-             * @param evt the key event trigger
-             */
-            @Override
-            public void keyTyped(KeyEvent evt) {
-                Cell cell = (Cell) evt.getSource();
-                // Disregard entry if not 1-9 or text already exists
-                if (!String.valueOf(evt.getKeyChar()).matches("^[1-9]$") || cell.getText().length() == 1) {
-                    System.out.println("Input: " + evt.getKeyChar() + " khong hop le.");
-                    evt.consume();
-                } else {
-                    // Check if input meets contraints
-                    if (!model.getPuzzle().meetsConstraints(cell, Integer.valueOf(String.valueOf(evt.getKeyChar()).trim()))) {
-                        System.err.println("Gia tri " + evt.getKeyChar() + " tai " + cell.getPosition() + " khong hop le");
-                        cell.setText("");
-                        cell.setUserValue(0);
-                        evt.consume();
-                    } else {
-                        cell.setUserValue(Integer.valueOf(String.valueOf(evt.getKeyChar()).trim()));
-                    }
-                    checkGridCompletion();
-                }
+     // KeyListener for cell input validation
+this.cellKeyListener = new KeyAdapter() {
+    @Override
+    public void keyTyped(KeyEvent evt) {
+        Cell cell = (Cell) evt.getSource();
+        if (!String.valueOf(evt.getKeyChar()).matches("^[1-9]$") || cell.getText().length() == 1) {
+            evt.consume();
+        } else {
+            // Push the current state onto the stack before changing
+            Cell previousState = new Cell(cell.getPosition(), cell.isLocked(), cell.getUserValue());
+            undoStack.push(previousState);
+
+            if (!model.getPuzzle().meetsConstraints(cell, Integer.valueOf(String.valueOf(evt.getKeyChar()).trim()))) {
+                cell.setText("");
+                cell.setUserValue(0);
+                evt.consume();
+            } else {
+                cell.setUserValue(Integer.valueOf(String.valueOf(evt.getKeyChar()).trim()));
             }
+            checkGridCompletion();
+        }
+    }
+};
 
-        };
-        this.cellMouseListener = new MouseAdapter() {
-            // Cell Hover Attribute
-            private Color preActionColor;
 
-            /**
-             * Event Handler for mouse button press
-             *
-             * @param evt the event trigger
-             */
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Cell cell = (Cell) evt.getSource();
+// MouseListener for cell hover and right-click actions
+this.cellMouseListener = new MouseAdapter() {
+    private Color preActionColor;
 
-                // On Right-Click, clear cell
-                if (evt.getButton() == MouseEvent.BUTTON3) {
-                    cell.setText("");
-                    cell.setUserValue(0);
-                }
+    @Override
+    public void mousePressed(MouseEvent evt) {
+        Cell cell = (Cell) evt.getSource();
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            cell.setText("");
+            cell.setUserValue(0);
+        }
+        cell.selectAll();
+    }
 
-                cell.selectAll();
+    @Override
+    public void mouseEntered(MouseEvent evt) {
+        Cell cell = (Cell) evt.getSource();
+        preActionColor = cell.getBackground();
+        for (Cell aCell : view.getGamePanel().getViewCellList()) {
+            if (cell.getPosition().getRow() == aCell.getPosition().getRow() ||
+                cell.getPosition().getColumn() == aCell.getPosition().getColumn() ||
+                cell.getPosition().getSubgrid() == aCell.getPosition().getSubgrid()) {
+                aCell.setBackground(APP_GREEN.darker().darker());
             }
+        }
+        cell.setBackground(APP_GREEN);
+    }
 
-            /**
-             * Highlights game constraints for the hovered cell
-             *
-             * @param evt the cell being hovered
-             */
-            @Override
-            public void mouseEntered(MouseEvent evt) {
-                Cell cell = (Cell) evt.getSource();
-                preActionColor = cell.getBackground();
-
-                // Highlight Valid Cells
-                for (Cell aCell : view.getGamePanel().getViewCellList()) {
-                    if (cell.getPosition().getRow() == aCell.getPosition().getRow()) {
-                        aCell.setBackground(APP_GREEN.darker().darker());
-                    }
-                    if (cell.getPosition().getColumn() == aCell.getPosition().getColumn()) {
-                        aCell.setBackground(APP_GREEN.darker().darker());
-                    }
-                    if (cell.getPosition().getSubgrid() == aCell.getPosition().getSubgrid()) {
-                        aCell.setBackground(APP_GREEN.darker().darker());
-                    }
-                }
-
-                cell.setBackground(APP_GREEN);
+    @Override
+    public void mouseExited(MouseEvent evt) {
+        Cell cell = (Cell) evt.getSource();
+        for (Cell aCell : view.getGamePanel().getViewCellList()) {
+            if (aCell.isLocked()) {
+                aCell.setBackground(BKGD_DARK_GRAY);
+            } else {
+                aCell.setBackground(BKGD_LIGHT_GRAY);
             }
+        }
+        cell.setBackground(preActionColor);
+    }
+};
 
-            /**
-             * Restores hover colors from hover event
-             *
-             * @param evt the hovered cell being exited from
-             */
-            @Override
-            public void mouseExited(MouseEvent evt) {
-                Cell cell = (Cell) evt.getSource();
-
-                // Restore Color
-                for (Cell aCell : view.getGamePanel().getViewCellList()) {
-                    if (aCell.isLocked()) {
-                        aCell.setBackground(BKGD_DARK_GRAY);
-                    } else {
-                        aCell.setBackground(BKGD_LIGHT_GRAY);
-                    }
-                }
-
-                cell.setBackground(preActionColor);
-            }
-
-        };
     }
 
     /**
@@ -311,7 +297,6 @@ public class SudokuGameApp extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
     /**
      * Signs the user into the application on correct credentials, else rejects
      * them.
@@ -399,51 +384,43 @@ private void updateListUsers(ArrayList<Player> listUsers) {
      * View update event handler.
      */
     private void update() {
-        // Set for each cell
-        for (Cell cell : this.view.getGamePanel().getViewCellList()) {
-            cell.setBackground(BKGD_DARK_GRAY);
-            cell.setForeground(Color.WHITE);
-            cell.setFont(new Font("Halvetica Neue", Font.PLAIN, 36));
-            cell.setBorder(new LineBorder(Color.BLACK, 0));
-            cell.setHorizontalAlignment(JTextField.CENTER);
-            cell.setCaretColor(new Color(32, 44, 53));
-            cell.setDragEnabled(false);
-            cell.setTransferHandler(null);
+    for (Cell cell : this.view.getGamePanel().getViewCellList()) {
+        cell.setBackground(cell.isLocked() ? BKGD_DARK_GRAY : BKGD_LIGHT_GRAY);
+        cell.setForeground(Color.WHITE);
+        cell.setFont(new Font("Halvetica Neue", Font.PLAIN, 36));
+        cell.setBorder(new LineBorder(Color.BLACK, 0));
+        cell.setHorizontalAlignment(JTextField.CENTER);
+        cell.setCaretColor(new Color(32, 44, 53));
+        cell.setDragEnabled(false);
+        cell.setTransferHandler(null);
 
-            // Add subgrid separators
-            CellPosition pos = cell.getPosition();
-            if (pos.getColumn() == 2 || pos.getColumn() == 5) {
-                cell.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(146, 208, 80)));
-            } else if (pos.getRow() == 2 || pos.getRow() == 5) {
-                cell.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(146, 208, 80)));
-            }
-            if ((pos.getColumn() == 2 && pos.getRow() == 2) || (pos.getColumn() == 5 && pos.getRow() == 5)
-                    || (pos.getColumn() == 2 && pos.getRow() == 5) || (pos.getColumn() == 5 && pos.getRow() == 2)) {
-                cell.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 2, new Color(146, 208, 80)));
-            }
-
-            // Validate User's Cell Input + Mouse Listeners
-            cell.removeKeyListener(cellKeyListener);
-            cell.removeMouseListener(cellMouseListener);
-            if (cell.isLocked()) {
-                cell.setEditable(false);
-                cell.setHighlighter(null);
-            } else {
-                cell.setBackground(BKGD_LIGHT_GRAY);
-                cell.addMouseListener(cellMouseListener);
-                cell.addKeyListener(cellKeyListener);
-            }
-            if (cell.isEmpty()) {
-                cell.setText("");
-            } else {
-                cell.setText(String.valueOf(cell.getUserValue()));
-            }
-
-            // Adds cell to the view's grid
-            this.view.getGamePanel().getGrid().add(cell);
+        CellPosition pos = cell.getPosition();
+        if (pos.getColumn() == 2 || pos.getColumn() == 5) {
+            cell.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(146, 208, 80)));
+        } else if (pos.getRow() == 2 || pos.getRow() == 5) {
+            cell.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(146, 208, 80)));
+        }
+        if ((pos.getColumn() == 2 && pos.getRow() == 2) || (pos.getColumn() == 5 && pos.getRow() == 5)
+                || (pos.getColumn() == 2 && pos.getRow() == 5) || (pos.getColumn() == 5 && pos.getRow() == 2)) {
+            cell.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 2, new Color(146, 208, 80)));
         }
 
+        cell.removeKeyListener(cellKeyListener);
+        cell.removeMouseListener(cellMouseListener);
+        if (cell.isLocked()) {
+            cell.setEditable(false);
+            cell.setHighlighter(null);
+        } else {
+            cell.setBackground(BKGD_LIGHT_GRAY);
+            cell.addMouseListener(cellMouseListener);
+            cell.addKeyListener(cellKeyListener);
+        }
+        cell.setText(cell.isEmpty() ? "" : String.valueOf(cell.getUserValue()));
+
+        this.view.getGamePanel().getGrid().add(cell);
     }
+}
+
 
     public static Object[] playerToObjArray(Player player) {
         // Split Player into its respective sections

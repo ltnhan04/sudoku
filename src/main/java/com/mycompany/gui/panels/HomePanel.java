@@ -138,7 +138,7 @@ public class HomePanel extends JPanel {
                 };
                 
                 tableModel = (DefaultTableModel) tableScores.getModel(); 
-                tableModel.setColumnIdentifiers(new String[] {"Điểm", "Người chơi","Thời gian"});
+                tableModel.setColumnIdentifiers(new String[] {"Điểm", "Người chơi","Thời gian(s)"});
                 tableScores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 
                 tableScores.getTableHeader().setFont(new Font(this.getFont().getFontName(), Font.PLAIN, this.getFont().getSize()));
