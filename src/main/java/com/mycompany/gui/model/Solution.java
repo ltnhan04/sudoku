@@ -39,25 +39,28 @@ public class Solution {
      * @param numEmpty absolute amount of empty cells
      * @return the true solution
      */
-    public int findSolution(List<Cell> emptyCells, int numEmpty) {
-        if (getLoop() < emptyCells.size()) {
-            for (int digit : shuffleValues()) {
-                if (grid.meetsConstraints(emptyCells.get(getLoop()), digit)) {
-                    emptyCells.get(getLoop()).setUserValue(digit);
-                    setLoop(getLoop() + 1);
-                    if (findSolution(emptyCells, numEmpty) >= numEmpty) {
-                        return result;
-                    }
+   public int findSolution(List<Cell> emptyCells, int numEmpty) {
+    if (getLoop() < emptyCells.size()) {
+        for (int digit : shuffleValues()) {
+            if (grid.meetsConstraints(emptyCells.get(getLoop()), digit)) {
+                emptyCells.get(getLoop()).setUserValue(digit);
+                System.out.println("Setting cell " + emptyCells.get(getLoop()).getPosition() + " to " + digit);
+                setLoop(getLoop() + 1);
+                if (findSolution(emptyCells, numEmpty) >= numEmpty) {
+                    return result;
                 }
             }
-            emptyCells.get(getLoop()).setUserValue(0);
-            setLoop(getLoop() - 1);
-            return result;
-        } else {
-            setLoop(getLoop() - 1);
-            return ++result;
         }
+        emptyCells.get(getLoop()).setUserValue(0);
+        System.out.println("Resetting cell " + emptyCells.get(getLoop()).getPosition());
+        setLoop(getLoop() - 1);
+        return result;
+    } else {
+        setLoop(getLoop() - 1);
+        return ++result;
     }
+}
+
 
     /**
      * Shuffles the list of possible values.

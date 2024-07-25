@@ -88,7 +88,7 @@ public class Grid implements Iterable<Cell> {
      * revealed
      */
     public void hint(boolean entireGrid) {
-        ArrayList<Cell> emptyCells = new ArrayList();
+        ArrayList<Cell> emptyCells = new ArrayList<>();
 
         for (Cell cell : cellList) {
             if (cell.isEmpty()) {
@@ -100,7 +100,7 @@ public class Grid implements Iterable<Cell> {
 
         for (Cell cell : emptyCells) {
             if (entireGrid) {
-                cell.userValue = cell.getSolutionValue();
+                cell.setUserValue(cell.getSolutionValue());
                 cell.setLocked(true);
             } else if (!entireGrid && cell.isEmpty()) {
                 cell.setUserValue(cell.getSolutionValue());
@@ -117,7 +117,7 @@ public class Grid implements Iterable<Cell> {
      */
     public boolean isSolved() {
         for (Cell cell : this) {
-            if (cell.userValue != cell.getSolutionValue()) {
+            if (cell.getUserValue() != cell.getSolutionValue()) {
                 return false;
             }
         }
@@ -165,53 +165,34 @@ public class Grid implements Iterable<Cell> {
      */
     public boolean meetsConstraints(Cell cell, int value) {
         return checkRow(cell.getPosition().getRow(), value)
-                && checkColumn(cell.getPosition().getColumn(), value)
-                && checkSubgrid(cell, value);
+            && checkColumn(cell.getPosition().getColumn(), value)
+            && checkSubgrid(cell, value);
     }
 
-    /**
-     * Check if the value occurs only once in the entire row
-     *
-     * @param row the row in which to check
-     * @param value the value for which to check
-     * @return true if the value occurs only once, else false
-     */
     private boolean checkRow(int row, int value) {
         for (Cell cell : cells[row]) {
             if (value == cell.getUserValue()) {
+                System.out.println("Conflict in row: " + row);
                 return false;
             }
         }
         return true;
     }
 
-    /**
-     * Check if the value occurs only once in the entire column
-     *
-     * @param column the column in which to check
-     * @param value the value for which to check
-     * @return true if the value occurs only once, else false
-     */
     private boolean checkColumn(int column, int value) {
         for (Cell[] columnCells : cells) {
             if (value == columnCells[column].getUserValue()) {
-                //System.err.println("CELL col: " + columnCells[column].getPosition() + " conflicts.");
+                System.out.println("Conflict in column: " + column);
                 return false;
             }
         }
         return true;
     }
 
-    /**
-     * Check if the value occurs only once in the chosen sub-grid
-     *
-     * @param currentCell the cell in which to check
-     * @param value the value for which to check
-     * @return true if the value occurs only once, else false
-     */
     private boolean checkSubgrid(Cell currentCell, int value) {
         for (Cell cell : subgrids.get(currentCell.getPosition().getSubgrid())) {
             if (value == cell.getUserValue()) {
+                System.out.println("Conflict in subgrid: " + currentCell.getPosition().getSubgrid());
                 return false;
             }
         }
@@ -241,65 +222,6 @@ public class Grid implements Iterable<Cell> {
     }
 
     /**
-     * @return Displays a visual representation of the Sudoku grid in the
-     * console.
-     */
-    @Override
-    public String toString() {
-        // Output string to append to
-        String result = "\n";
-        result += printColumnChars();
-
-        // Top Border
-        result += ("\n   |---------|---------|---------|\n");
-
-        // For each row of cells
-        for (int i = 0; i < 9; i++) {
-            // Append row numbers with correct padding
-            if (i == 3 || i == 6) {
-                result += ("   |---------|---------|---------|\n");
-            }
-            result += " " + (i + 1) + " |";
-
-            // Append a representation of the cells
-            for (int j = 0; j < 9; j++) {
-                result += (cells[i][j]);
-                if (j == 2 || j == 5) {
-                    result += ("|");
-                }
-            }
-            result += ("| " + (i + 1) + "\n");
-        }
-
-        // Bottom Border
-        result += ("   |---------|---------|---------|\n");
-        result += printColumnChars();
-        return result;
-    }
-
-    /**
-     * Produce column letters with correct padding
-     *
-     * @return a row of space-separated column headers (A-I)
-     */
-    private String printColumnChars() {
-        String output = "";
-        // Append column letters with correct padding
-        for (int i = 1; i <= this.SIZE; i++) {
-            if (i == 1) {
-                output += "     " + (char) (i + 64);
-            } else {
-                if (i == 4 || i == 7) {
-                    output += "   " + (char) (i + 64);
-                } else {
-                    output += "  " + (char) (i + 64);
-                }
-            }
-        }
-        return output;
-    }
-
-    /**
      * @return a unique cell iterator
      */
     @Override
@@ -316,5 +238,14 @@ public class Grid implements Iterable<Cell> {
         ArrayList<Cell> shuffledCells = new ArrayList<>(cellList);
         Collections.shuffle(shuffledCells);
         return shuffledCells;
+    }
+
+    public Cell getCellAt(CellPosition position) {
+        for (Cell cell : cellList) {
+            if (cell.getPosition().equals(position)) {
+                return cell;
+            }
+        }
+        throw new IllegalArgumentException("Cell at position " + position + " not found.");
     }
 }

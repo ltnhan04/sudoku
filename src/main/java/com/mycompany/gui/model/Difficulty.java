@@ -12,9 +12,9 @@ public enum Difficulty {
 
     // Averages with ± 2 (variance), must be less than 64 for solution to be unique.
     // NOTE: The higher the number of blank cells, the longer it takes to produce a unique solution.
-    BEGINNER(20, 3),
-    INTERMEDIATE(35, 5),
-    ADVANCED(43, 8);
+    BEGINNER(15, 3),
+    INTERMEDIATE(25,5),
+    ADVANCED(33, 8);
 
     // Difficulty Attributes
     private final int variance = 2;

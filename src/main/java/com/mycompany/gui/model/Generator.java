@@ -1,6 +1,7 @@
 package com.mycompany.gui.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,56 +71,42 @@ public class Generator {
      *
      * @param numRemove the amount of digits (cells) to empty
      */
-    public void emptyCells(int numRemove) {
-        // Set every cell provisional value
-        getGrid().provisionCells();
+   public void emptyCells(int numRemove) {
+    getGrid().provisionCells();
+    List<Cell> cellList = new ArrayList<>(getGrid().getCellList());
+    Collections.shuffle(cellList); // Randomize the selection of cells
 
-        // Execute for each cell in the grid
-        while (getGrid().iterator().hasNext()) {
+    int cellsEmptied = 0;
 
-            // If the cell is not empty, empty it
-            Cell cell = getGrid().iterator().next();
+    for (Cell cell : cellList) {
+        if (cellsEmptied == numRemove) {
+            break;
+        }
+
+        if (!cell.isEmpty()) {
             cell.storeProvisionalValue();
+            cell.setUserValue(0);
 
-            if (!cell.isEmpty()) {
-                cell.setUserValue(0);
-            } else {
-                continue;
-            }
-
-            // Find a solution for the grid
             this.solution.solveFor(getGrid());
 
-            // Stop emptying cell if the specified number of empty cells is reached
-            if (numRemove == allEmptyCells(getGrid()).size()) {
-                break;
+            // Ensure the grid still has a unique solution
+            if (this.solution.findSolution(allEmptyCells(getGrid()), 3) == 1) {
+                cellsEmptied++;
             } else {
-                // If a unique solution can be produced with missing cells
-                if (this.solution.findSolution(allEmptyCells(getGrid()), 3) != 1) {
-                    getGrid().fetchCellProvision();
-                } else {
-                    cell.storeProvisionalValue();
-                }
-            }
-        }
-
-        // Lock all hint cells      
-        lockHints();
-    }
-
-    /**
-     * Lock leftover cells (hints) to prevent them from being edited by the
-     * user.
-     */
-    private void lockHints() {
-        for (Cell cell : getGrid()) {
-            if (cell.isEmpty()) {
-                cell.setLocked(false);
-            } else {
-                cell.setLocked(true);
+                // Revert the change if the solution is not unique
+                cell.fetchProvisionalValue();
             }
         }
     }
+
+    lockHints();
+}
+
+private void lockHints() {
+    for (Cell cell : getGrid()) {
+        cell.setLocked(!cell.isEmpty());
+    }
+}
 
     /**
      * @return the number of intended empty cells
