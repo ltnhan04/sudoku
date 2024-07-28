@@ -19,15 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-/**
- * View for a Sudoku Game Panel
- * 
- *
- * @version 1.0
- */
+
 public class GamePanel extends JPanel {
     
-    // Game Panel Attributes
     private List<Cell> viewCellList;
     private final JButton endGameBtn;
     private final JButton viewRulesBtn;
@@ -37,14 +31,11 @@ public class GamePanel extends JPanel {
     private JLabel levelTitle;
     private JLabel timeLabel;
     
-    /**
-     * Constructs a Game Panel.
-     */
+
     public GamePanel() {
         
         this.setLayout(new BorderLayout());
 
-        // Banner
         JPanel banner = new JPanel();
         banner.setLayout(new BoxLayout(banner, BoxLayout.LINE_AXIS));
         banner.setPreferredSize(new Dimension(1000, 115));
@@ -53,10 +44,8 @@ public class GamePanel extends JPanel {
         
 
             
-            // Spacing
             banner.add(Box.createRigidArea(new Dimension(5,0)));
             
-            // Dynamic Banner Content
             JPanel jP2 = new JPanel();
             jP2.setBackground(BKGD_DARK_GRAY);
             jP2.setPreferredSize(new Dimension(200, 100));
@@ -80,7 +69,6 @@ public class GamePanel extends JPanel {
             banner.add(Box.createRigidArea(new Dimension(15,0)));
         this.add(banner, BorderLayout.NORTH);
 
-        // Main Content
         JPanel main = new JPanel();
         main.setLayout(null);
         main.setBackground(BKGD_DARK_GRAY);           
@@ -92,20 +80,16 @@ public class GamePanel extends JPanel {
             
                 undoBtn = new AppJButton("UNDO",14,BKGD_LIGHT_GRAY, APP_GREEN );
                 actions.add(undoBtn);
-                // Get Hint Button
                 hintBtn = new AppJButton("GỢI Ý", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(hintBtn);
             
-                // View Rules Button
                 viewRulesBtn = new AppJButton("XEM LUẬT", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(viewRulesBtn);
             
-                // Sign Out Button
                 endGameBtn = new AppJButton("NGHỈ GAME", 14, BKGD_LIGHT_GRAY, APP_GREEN);
                 actions.add(endGameBtn);
             main.add(actions);
             
-            // Game Grid Panel
             grid = new JPanel();
             grid.setLayout(new GridLayout(9, 9));
             grid.setPreferredSize(new Dimension(120, 120));
@@ -120,74 +104,53 @@ public class GamePanel extends JPanel {
         this.add(main);
     }    
     
-    /**
-     * @return the endGameBtn
-     */
+
     public JButton getEndGameBtn() {
         return endGameBtn;
     }
     public JButton getUndoBtn(){
         return undoBtn;
     }
-    /**
-     * @return the viewRulesBtn
-     */
+
     public JButton getViewRulesBtn() {
         return viewRulesBtn;
     }
 
-    /**
-     * @return the hintBtn
-     */
+
     public JButton getHintBtn() {
         return hintBtn;
     }
 
-    /**
-     * @return the levelTitle
-     */
+
     public JLabel getLevelTitle() {
         return levelTitle;
     }
 
-    /**
-     * @param levelTitle the levelTitle to set
-     */
     public void setLevelTitle(JLabel levelTitle) {
         this.levelTitle = levelTitle;
     }
 
-    /**
-     * @return the timeLabel
-     */
+
     public JLabel getTimeLabel() {
         return timeLabel;
     }
 
-    /**
-     * @param timeLabel the timeLabel to set
-     */
+
     public void setTimeLabel(JLabel timeLabel) {
         this.timeLabel = timeLabel;
     }
 
-    /**
-     * @return the grid
-     */
+
     public JPanel getGrid() {
         return grid;
     }
 
-    /**
-     * @return the viewCellList
-     */
+
     public List<Cell> getViewCellList() {
         return viewCellList;
     }
 
-    /**
-     * @param viewCellList the viewCellList to set
-     */
+
     public void setViewCellList(List<Cell> viewCellList) {
         this.viewCellList = viewCellList;
     }

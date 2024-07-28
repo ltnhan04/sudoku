@@ -32,12 +32,7 @@ import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * This is the Sudoku Game (CONTROLLER).
- *
- * 
- * @version 1.0
- */
+
 public class SudokuGameApp extends JFrame {
     private Stack<Cell> undoStack;
     private final SudokuGame model;
@@ -47,13 +42,10 @@ public class SudokuGameApp extends JFrame {
     private final KeyListener cellKeyListener;
     private final MouseListener cellMouseListener;
 
-    /**
-     * Constructs the Sudoku Game Frame
-     *
-     * @param name title of the application window
-     */
+
     public SudokuGameApp(String name) {
-        super(name);        this.model = new SudokuGame();
+        super(name);        
+        this.model = new SudokuGame();
         this.view = new SudokuGamePanel();
         this.undoStack = new Stack<>();
         getContentPane().add(this.view);
@@ -154,7 +146,6 @@ public class SudokuGameApp extends JFrame {
                 }
             }
         });
-        //actions listeners on undo button
         
     this.view.getGamePanel().getUndoBtn().addActionListener(new ActionListener() {
     @Override
@@ -172,11 +163,9 @@ public class SudokuGameApp extends JFrame {
 });
 
 
-        // Actions Listeners on Game & Rules Panel
         this.view.getGamePanel().getHintBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // User wants a hint, check if game has unused hints
                 if (model.getHintsUsed() < model.getPuzzle().getDifficulty().getMaxHints()) {
                     model.getPuzzle().hint(false);
                     model.setHintsUsed(model.getHintsUsed() + 1);
@@ -193,15 +182,14 @@ public class SudokuGameApp extends JFrame {
         this.view.getGamePanel().getViewRulesBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Show Rules Panel
-                rulesCaller = "game"; // -> Rules was called from the 'game' panel, so return to it when done
+                rulesCaller = "game"; 
                 view.getCardLayoutManager().show(view.getContent(), "rules");
             }
         });
         this.view.getRulesPanel().getBackBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.getCardLayoutManager().show(view.getContent(), rulesCaller); // -> Return to caller panel
+                view.getCardLayoutManager().show(view.getContent(), rulesCaller);
             }
         });
         this.view.getGamePanel().getEndGameBtn().addActionListener(new ActionListener() {
@@ -216,8 +204,7 @@ public class SudokuGameApp extends JFrame {
             }
         });
 
-        // Cell Listener Adapters
-     // KeyListener for cell input validation
+
 this.cellKeyListener = new KeyAdapter() {
     @Override
     public void keyTyped(KeyEvent evt) {
@@ -225,7 +212,6 @@ this.cellKeyListener = new KeyAdapter() {
         if (!String.valueOf(evt.getKeyChar()).matches("^[1-9]$") || cell.getText().length() == 1) {
             evt.consume();
         } else {
-            // Push the current state onto the stack before changing
             Cell previousState = new Cell(cell.getPosition(), cell.isLocked(), cell.getUserValue());
             undoStack.push(previousState);
 
@@ -242,7 +228,6 @@ this.cellKeyListener = new KeyAdapter() {
 };
 
 
-// MouseListener for cell hover and right-click actions
 this.cellMouseListener = new MouseAdapter() {
     private Color preActionColor;
 
@@ -286,33 +271,22 @@ this.cellMouseListener = new MouseAdapter() {
 
     }
 
-    /**
-     * Application entry point.
-     *
-     * @param args Optional startup arguments
-     */
     public static void main(String[] args) {
         JFrame frame = new SudokuGameApp("Sudoku Game");
  
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    /**
-     * Signs the user into the application on correct credentials, else rejects
-     * them.
-     */
+
     private void signInEvt() {
     // Retrieve Details
     String email = this.view.getWelcomePanel().getSignInPanel().getEmailText().getText().trim();
     String password = new String(this.view.getWelcomePanel().getSignInPanel().getPasswordText().getPassword()).trim();
     if (!email.equals("") && !password.equals("")) {
-        Player player = new Player(email, password); // Khởi tạo Player với email và password
+        Player player = new Player(email, password); 
         if (player.checkLogin()) {
-            // Set Player
             model.setPlayer(player);
-            // Clear Fields
             view.getWelcomePanel().getSignInPanel().clear();
-            // Show Home Screen
             refreshHomePanel();
             view.getCardLayoutManager().show(view.getContent(), "home");
         } else {
@@ -326,9 +300,7 @@ this.cellMouseListener = new MouseAdapter() {
 }
 
 
-    /**
-     * Signs the user up and registers them in the database.
-     */
+
     private void signUpEvt() {
     String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
     String fullname = this.view.getWelcomePanel().getSignUpPanel().getFullnameText().getText().trim();
@@ -347,7 +319,6 @@ this.cellMouseListener = new MouseAdapter() {
                 JOptionPane.showOptionDialog(this, "Đăng ký không thành công!\nTài khoản đã tồn tại.", "Đăng ký thông thành công", JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE, null, options, null);
             }
         } else {
-            // Email doesn't meet requirement
             Object[] options = {"Được thôi"};
             JOptionPane.showOptionDialog(this, "Email phải hợp lệ.", "Email không hợp lệ", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, null);
         }
@@ -359,13 +330,10 @@ this.cellMouseListener = new MouseAdapter() {
 }
 
 
-    /**
-     * Updates (refreshes) the Home panel.
-     */
+
 private void refreshHomePanel() {
     view.getHomePanel().getNameLabel().setText(SudokuGame.getCurrentPlayer().getUsername().toUpperCase());
 
-    // Sắp xếp listUsers trước khi cập nhật bảng
 
     view.getHomePanel().getTableModel().setRowCount(0);
 
@@ -380,9 +348,7 @@ private void updateListUsers(ArrayList<Player> listUsers) {
     }
 }
 
-    /**
-     * View update event handler.
-     */
+
     private void update() {
     for (Cell cell : this.view.getGamePanel().getViewCellList()) {
         cell.setBackground(cell.isLocked() ? BKGD_DARK_GRAY : BKGD_LIGHT_GRAY);
@@ -431,9 +397,7 @@ private void updateListUsers(ArrayList<Player> listUsers) {
         return initList;
     }
 
-    /**
-     * Checks the player's current grid's completion
-     */
+
     private void checkGridCompletion() {
         if (this.model.getPuzzle().isFilled()) {
             if (this.model.getPuzzle().isSolved()) {
@@ -442,9 +406,7 @@ private void updateListUsers(ArrayList<Player> listUsers) {
         }
     }
 
-    /**
-     * Events which fire at completion of Sudoku grid
-     */
+
     private void puzzleCompleted() {
         this.model.getTimer().stop();
         String gameTime = view.getGamePanel().getTimeLabel().getText();
@@ -471,9 +433,7 @@ private void updateListUsers(ArrayList<Player> listUsers) {
     int seconds = Integer.parseInt(parts[1]);
     return minutes * 60 + seconds;
 }
-    /**
-     * Clears game settings after game
-     */
+
     private void destroyGameInstance() {
         // Destroy Game
         this.model.setPuzzle(null);

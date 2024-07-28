@@ -5,26 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- * Information about the Sudoku Grid
- *
- * @author Nhan
- * @version 1.0
- */
+
 public class Grid implements Iterable<Cell> {
 
-    // Grid Attributes
     private final int SIZE = 9;
     private final Cell[][] cells;
     private final List<Cell> cellList;
     private final List<List<Cell>> subgrids;
     private final Difficulty difficulty;
 
-    /**
-     * Constructs a Grid object
-     *
-     * @param diff the difficulty level of the grid
-     */
+
     public Grid(Difficulty diff) {
         this.cells = new Cell[this.SIZE][this.SIZE];
         this.cellList = new ArrayList<>(this.SIZE * this.SIZE);
@@ -33,9 +23,7 @@ public class Grid implements Iterable<Cell> {
         initialiseGrid();
     }
 
-    /**
-     * Sets up the Sudoku grid
-     */
+
     private void initialiseGrid() {
         for (int row = 0; row < this.SIZE; row++) {
             for (int column = 0; column < this.SIZE; column++) {
@@ -47,11 +35,7 @@ public class Grid implements Iterable<Cell> {
         }
     }
 
-    /**
-     * Generate a list of cell lists for subgrid formation
-     *
-     * @return the gridList containing lists of cells
-     */
+
     private List<List<Cell>> generateSubgrids() {
         List<List<Cell>> gridList = new ArrayList<>(this.SIZE);
         for (int i = 0; i < this.SIZE; i++) {
@@ -60,33 +44,21 @@ public class Grid implements Iterable<Cell> {
         return gridList;
     }
 
-    /**
-     * @return a list of all cells in this grid
-     */
+
     public List<Cell> getCellList() {
         return this.cellList;
     }
 
-    /**
-     * @return a list of cells belonging to each subgrid
-     */
+
     public List<List<Cell>> getSubgrids() {
         return this.subgrids;
     }
 
-    /**
-     * @return the difficulty
-     */
+
     public Difficulty getDifficulty() {
         return difficulty;
     }
 
-    /**
-     * Instantly Reveals the solution
-     *
-     * @param entireGrid whether or not every cell in the grid should be
-     * revealed
-     */
     public void hint(boolean entireGrid) {
         ArrayList<Cell> emptyCells = new ArrayList<>();
 
@@ -110,11 +82,7 @@ public class Grid implements Iterable<Cell> {
         }
     }
 
-    /**
-     * Checks whether the current grid is solved (by user)
-     *
-     * @return true if solved, else false
-     */
+
     public boolean isSolved() {
         for (Cell cell : this) {
             if (cell.getUserValue() != cell.getSolutionValue()) {
@@ -124,29 +92,20 @@ public class Grid implements Iterable<Cell> {
         return true;
     }
 
-    /**
-     * Calls storeProvisionalValue() method on every Cell within the grid.
-     */
+
     public void provisionCells() {
         for (Cell cell : this) {
             cell.storeProvisionalValue();
         }
     }
 
-    /**
-     * Calls fetchProvisionalValue() method on every Cell within the grid.
-     */
     public void fetchCellProvision() {
         for (Cell cell : this) {
             cell.fetchProvisionalValue();
         }
     }
 
-    /**
-     * Evaluates whether the grid is filled or not
-     *
-     * @return true if filled, else false
-     */
+
     public boolean isFilled() {
         for (int i = 0; i < this.cellList.size(); i++) {
             if (this.cellList.get(i).isEmpty()) {
@@ -156,13 +115,6 @@ public class Grid implements Iterable<Cell> {
         return true;
     }
 
-    /**
-     * Check if the user's value meets the constraints of the placement rules
-     *
-     * @param cell the cell in which to place the value
-     * @param value the value to go into that cell
-     * @return true if all constraints have been met, else false
-     */
     public boolean meetsConstraints(Cell cell, int value) {
         return checkRow(cell.getPosition().getRow(), value)
             && checkColumn(cell.getPosition().getColumn(), value)
@@ -199,41 +151,23 @@ public class Grid implements Iterable<Cell> {
         return true;
     }
 
-    /**
-     * Get cell in a grid position (1A-9I)
-     *
-     * @param row row containing cell
-     * @param column column containing cell
-     * @return the cell at the specified position
-     */
+
     public Cell getCell(int row, char column) {
         return this.cells[row - 1][(Character.toUpperCase(column) - 65)];
     }
 
-    /**
-     * Get cell at integer coordinate position
-     *
-     * @param xPos x position (1-9)
-     * @param yPos y position (1-9)
-     * @return the cell at the specified position
-     */
+
     public Cell getCell(int xPos, int yPos) {
         return this.cells[xPos - 1][yPos - 1];
     }
 
-    /**
-     * @return a unique cell iterator
-     */
+
     @Override
     public ListIterator<Cell> iterator() {
         return shuffleCells().listIterator();
     }
 
-    /**
-     * Shuffles the list of cells in the grid.
-     *
-     * @return a shuffled list of cells
-     */
+
     public ArrayList<Cell> shuffleCells() {
         ArrayList<Cell> shuffledCells = new ArrayList<>(cellList);
         Collections.shuffle(shuffledCells);

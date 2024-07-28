@@ -84,7 +84,6 @@ public class Player {
                 this.username = player.getUsername();
                 this.score = player.getScore();
                 this.gameTime = player.getTime();
-                // Lưu thông tin người dùng hiện tại vào SudokuGame.currentPlayer
                 SudokuGame.setCurrentPlayer(player);
                 return true;
             }
