@@ -11,20 +11,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-/**
- * Stores the VIEW for a Rules Panel
- *
- * 
- */
+
 public class RulesPanel extends JPanel {
 
-    // Rules Panel Attributes
     private final String rules;
     private final AppJButton backBtn;
 
-    /**
-     * Constructs a Rules Panel.
-     */
+
     public RulesPanel() {
 
         this.rules = "<html>Luật chơi rất đơn giản, có 81 ô vuông trên một lưới.<br>"
@@ -41,7 +34,6 @@ public class RulesPanel extends JPanel {
         this.setLayout(new GridLayout(1, 0));
         this.setBackground(BKGD_DARK_GRAY);
 
-        // Main Content of Panel
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
         content.setBackground(BKGD_DARK_GRAY);
@@ -66,9 +58,6 @@ public class RulesPanel extends JPanel {
 
     }
 
-    /**
-     * @return the Back button
-     */
     public AppJButton getBackBtn() {
         return backBtn;
     }

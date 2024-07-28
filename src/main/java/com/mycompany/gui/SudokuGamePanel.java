@@ -23,70 +23,54 @@ public class SudokuGamePanel extends JPanel {
 
         this.setLayout(new GridLayout());
 
-        // Panel Setup
+       
         this.welcomePanel = new WelcomePanel();
         this.homePanel = new HomePanel();
         this.gamePanel = new GamePanel();
         this.rulesPanel = new RulesPanel();
 
-        // Content View Panels
         content.setLayout(cardLayoutManager);
         content.add(this.welcomePanel);
         content.add(this.homePanel);
         content.add(this.gamePanel);
         content.add(this.rulesPanel);
 
-        // Set Panel Identifiers
         cardLayoutManager.addLayoutComponent(this.welcomePanel, "welcome");
         cardLayoutManager.addLayoutComponent(this.homePanel, "home");
         cardLayoutManager.addLayoutComponent(this.gamePanel, "game");
         cardLayoutManager.addLayoutComponent(this.rulesPanel, "rules");
 
-        // Set Start Up Panel
         cardLayoutManager.show(content, "welcome");
 
-        // Add Content
         this.add(content);
     }
 
-    /**
-     * @return the welcomePanel
-     */
+
     public WelcomePanel getWelcomePanel() {
         return welcomePanel;
     }
 
-    /**
-     * @return the homePanel
-     */
+
     public HomePanel getHomePanel() {
         return homePanel;
     }
 
-    /**
-     * @return the gamePanel
-     */
+ 
     public GamePanel getGamePanel() {
         return gamePanel;
     }
 
-    /**
-     * @return the cardLayoutManager
-     */
+
     public CardLayout getCardLayoutManager() {
         return cardLayoutManager;
     }
 
-    /**
-     * @return the content
-     */
+
     public JPanel getContent() {
         return content;
     }
 
-    /**
-     * @return the rulesPanel
-     */
+
     public RulesPanel getRulesPanel() {
         return rulesPanel;
     }
